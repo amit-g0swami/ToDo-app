@@ -1,60 +1,26 @@
-import React, { Component } from 'react'
-// import './App.css'
-import TodoList from './TodoList'
-import TodoItems from './TodoItems'
+import React, { useState } from 'react'
+import Home from './components/Home'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Header from './components/Header';
+import SearchPage from "./components/SearchPage";
+import Profile from './components/Profile';
+import Bookings from './components/Bookings';
 
-class App extends Component {
-  inputElement = React.createRef()
-  constructor() {
-    super()
-    this.state = {
-      items: [],
-      currentItem: {
-        text: '',
-        key: '',
-      },
-    }
-  }
-  deleteItem = key => {
-    const filteredItems = this.state.items.filter(item => {
-      return item.key !== key
-    })
-    this.setState({
-      items: filteredItems,
-    })
-  }
-
-  handleInput = e => {
-    const itemText = e.target.value
-    const currentItem = { text: itemText, key: Date.now() }
-    this.setState({
-      currentItem,
-    })
-  }
-  addItem = e => {
-    e.preventDefault()
-    const newItem = this.state.currentItem
-    if (newItem.text !== '') {
-      const items = [...this.state.items, newItem]
-      this.setState({
-        items: items,
-        currentItem: { text: '', key: '' },
-      })
-    }
-  }
-  render() {
-    return (
-      <div className="App">
-        <TodoList
-          addItem={this.addItem}
-          inputElement={this.inputElement}
-          handleInput={this.handleInput}
-          currentItem={this.state.currentItem}
-        />
-        <TodoItems entries={this.state.items} deleteItem={this.deleteItem} />
-      </div>
-    )
-  }
+function App() {
+  const [book, setBook] = useState();
+  return (
+    <>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home setBook={setBook} />} />
+          <Route path="/search" element={<SearchPage book={book} />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/my-bookings" element={<Bookings />} />
+        </Routes>
+      </Router>
+    </>
+  )
 }
 
 export default App
